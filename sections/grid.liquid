@@ -1,11 +1,3 @@
-{% comment %}
-Figma Style Product Grid
-Desktop 3x2
-Mobile 1 column
-Popup + Variants + Add to cart
-Vanilla JS only
-{% endcomment %}
-
 <section class="figma-grid">
   <div class="grid-wrapper">
 
@@ -24,7 +16,6 @@ Vanilla JS only
 
         <!-- VARIANTS UI -->
         <div class="variant-row">
-
           <!-- Size select -->
           <select class="size-select">
             {% for variant in product.variants %}
@@ -35,7 +26,6 @@ Vanilla JS only
           <!-- Add button -->
           <button class="add-btn">ADD TO CART</button>
         </div>
-
       </div>
     </div>
     {% endfor %}
@@ -43,99 +33,77 @@ Vanilla JS only
   </div>
 </section>
 
-
 <!-- ================= POPUP ================= -->
-<!-- ================= FIGMA POPUP ================= -->
 <div class="popup" style="display:none;">
   <div class="popup-box">
-
     <span class="close">&times;</span>
-
     <div class="popup-grid">
-
       <!-- LEFT IMAGE -->
       <div class="popup-left">
         <img class="popup-img">
       </div>
-
       <!-- RIGHT INFO -->
       <div class="popup-right">
         <h2 class="popup-title"></h2>
         <p class="popup-price"></p>
         <div class="popup-desc"></div>
-
         <select class="popup-variants"></select>
-
         <button class="popup-add">ADD TO CART</button>
       </div>
-
     </div>
   </div>
 </div>
 
-
-
-
+<style>
 /* ================= GRID ================= */
-
 .figma-grid {
   padding:50px 30px;
 }
-
 .grid-wrapper{
   display:grid;
   grid-template-columns:repeat(3,1fr);
   gap:25px;
 }
-
-/* ---------- MOBILE: 2 per row ---------- */
+/* MOBILE: 1 column */
 @media(max-width:768px){
   .grid-wrapper{
-    grid-template-columns:repeat(2,1fr);
+    grid-template-columns:1fr;
   }
 }
 
 /* ================= CARD ================= */
-
 .product-card{
   border:1px solid #eaeaea;
   background:#fff;
   transition:.25s;
   cursor:pointer;
 }
-
 .product-card:hover{
   transform:translateY(-4px);
   box-shadow:0 10px 20px rgba(0,0,0,.08);
 }
-
 .card-image img{
   width:100%;
   height:220px;
   object-fit:cover;
 }
-
 .card-info{
   padding:14px;
   text-align:center;
 }
-
 .price{
   font-weight:700;
   margin:6px 0 12px;
 }
-
 .variant-row{
   display:flex;
   gap:8px;
 }
-
 .size-select{
   flex:1;
   padding:8px;
   border:1px solid #ddd;
 }
-
 .add-btn{
   background:#000;
   color:#fff;
@@ -145,14 +113,11 @@ Vanilla JS only
   cursor:pointer;
   transition:.2s;
 }
-
 .add-btn:hover{
   background:#333;
 }
 
-
 /* ================= POPUP ================= */
-
 .popup{
   position:fixed;
   inset:0;
@@ -162,7 +127,6 @@ Vanilla JS only
   align-items:center;
   z-index:9999;
 }
-
 .popup-box{
   background:#fff;
   width:90%;
@@ -172,41 +136,34 @@ Vanilla JS only
   box-shadow:0 25px 50px rgba(0,0,0,.25);
   position:relative;
 }
-
 .popup-grid{
   display:grid;
   grid-template-columns: 1fr 1fr;
   gap:30px;
 }
-
 .popup-left img{
   width:100%;
   height:350px;
   object-fit:cover;
   border-radius:8px;
 }
-
 .popup-right{
   display:flex;
   flex-direction:column;
   gap:12px;
 }
-
 .popup-title{
   font-size:22px;
   font-weight:700;
 }
-
 .popup-price{
   font-size:20px;
   font-weight:700;
 }
-
 .popup-variants{
   padding:10px;
   border:1px solid #ddd;
 }
-
 .popup-add{
   background:#000;
   color:#fff;
@@ -215,11 +172,9 @@ Vanilla JS only
   font-weight:700;
   cursor:pointer;
 }
-
 .popup-add:hover{
   background:#333;
 }
-
 .close{
   position:absolute;
   top:10px;
@@ -228,20 +183,16 @@ Vanilla JS only
   cursor:pointer;
 }
 
-
-/* ---------- MOBILE POPUP ---------- */
+/* MOBILE POPUP */
 @media(max-width:768px){
   .popup-grid{
     grid-template-columns:1fr;
   }
-
   .popup-left img{
     height:250px;
   }
 }
-
-
-
+</style>
 
 <script>
 document.addEventListener("DOMContentLoaded", ()=>{
@@ -255,63 +206,58 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const popupVariants = document.querySelector(".popup-variants");
   const popupAdd = document.querySelector(".popup-add");
 
-  /* ========= CARD ADD BUTTON ========= */
-  document.querySelectorAll(".add-btn").forEach(btn=>{
-    btn.onclick = function(e){
-      e.stopPropagation();
-      const card = this.closest(".product-card");
-      const variantId = card.querySelector(".size-select").value;
-      addToCart(variantId,1);
-    }
-  });
-
-  /* ========= OPEN POPUP ========= */
-  document.querySelectorAll(".product-card").forEach(card=>{
-    card.onclick = function(){
-      const handle = this.dataset.handle;
-
-      fetch(`/products/${handle}.js`)
-      .then(r=>r.json())
-      .then(product=>{
-        popup.style.display="flex";
-
-        popupImg.src = product.images[0];
-        popupTitle.textContent = product.title;
-        popupPrice.textContent = Shopify.formatMoney(product.price);
-        popupDesc.innerHTML = product.description;
-
-        popupVariants.innerHTML="";
-        product.variants.forEach(v=>{
-          const o=document.createElement("option");
-          o.value=v.id;
-          o.text=v.title;
-          popupVariants.appendChild(o);
-        });
-
-        popupAdd.onclick=()=>{
-          addToCart(popupVariants.value,1);
-
-          const selected = product.variants.find(v=>v.id==popupVariants.value);
-
-          if(selected.title.includes("Black") && selected.title.includes("Medium")){
-            fetch('/products/soft-winter-jacket.js')
-              .then(r=>r.json())
-              .then(sw=> addToCart(sw.variants[0].id,1));
-          }
-        }
-      })
-    }
-  });
-
-  close.onclick=()=> popup.style.display="none";
-
-  function addToCart(id,qty){
+  function addToCart(id, qty){
     fetch('/cart/add.js',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({id:id, quantity:qty})
-    }).then(()=> alert("Added to cart"));
+    }).then(r=>r.json())
+      .then(()=> alert("Added to cart"))
+      .catch(err=> console.error(err));
   }
+
+  // CARD ADD BUTTON
+  document.querySelectorAll(".add-btn").forEach(btn=>{
+    btn.addEventListener("click", e=>{
+      e.stopPropagation();
+      const card = btn.closest(".product-card");
+      const variantId = card.querySelector(".size-select").value;
+      addToCart(variantId,1);
+    });
+  });
+
+  // OPEN POPUP
+  document.querySelectorAll(".product-card").forEach(card=>{
+    card.addEventListener("click", ()=>{
+      const handle = card.dataset.handle;
+      fetch(`/products/${handle}.js`)
+      .then(r=>r.json())
+      .then(product=>{
+        popup.style.display="flex";
+        popupImg.src = product.images[0];
+        popupTitle.textContent = product.title;
+        popupPrice.textContent = product.price / 100; // formatted price
+        popupDesc.innerHTML = product.description;
+
+        popupVariants.innerHTML="";
+        product.variants.forEach(v=>{
+          const o = document.createElement("option");
+          o.value = v.id;
+          o.textContent = v.title;
+          popupVariants.appendChild(o);
+        });
+
+        // Remove old listener
+        popupAdd.replaceWith(popupAdd.cloneNode(true));
+        const newPopupAdd = document.querySelector(".popup-add");
+        newPopupAdd.addEventListener("click", ()=>{
+          addToCart(popupVariants.value,1);
+        });
+      });
+    });
+  });
+
+  close.addEventListener("click", ()=> popup.style.display="none");
 
 });
 </script>
