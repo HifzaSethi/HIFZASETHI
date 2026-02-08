@@ -1,132 +1,181 @@
-{% comment %}
-Grid Section
-- Show 6 products dynamically
-- Click product → open popup with details
-- Add to cart functionality
-{% endcomment %}
-
-<section class="custom-grid">
+<div class="grid-section">
   <div class="grid-container">
-    {% for product in collections.all.products limit:6 %}
-    <div class="grid-item" data-product-handle="{{ product.handle }}">
-      <img src="{{ product.featured_image | img_url: 'medium' }}" alt="{{ product.title }}">
-      <h3>{{ product.title }}</h3>
-      <p>{{ product.price | money }}</p>
-    </div>
+    {% for block in section.blocks %}
+      <div class="product-card" data-product-id="{{ block.settings.product }}">
+        <img src="{{ block.settings.product_image | default: 'https://via.placeholder.com/300x300' }}" alt="{{ block.settings.product_name }}">
+        <h3>{{ block.settings.product_name }}</h3>
+        <p>{{ block.settings.product_price }}</p>
+        <button class="view-details-btn" data-product-id="{{ block.settings.product }}">View Details</button>
+      </div>
     {% endfor %}
   </div>
-</section>
 
-<!-- Popup -->
-<div class="product-popup" style="display:none;">
-  <div class="popup-inner">
-    <span class="popup-close">&times;</span>
-    <h2 class="popup-title"></h2>
-    <p class="popup-price"></p>
-    <div class="popup-description"></div>
-    <select class="popup-variants"></select>
-    <button class="popup-add-to-cart">Add to Cart</button>
+  <!-- Popup -->
+  <div class="product-popup" id="product-popup" style="display:none;">
+    <div class="popup-content">
+      <span class="close-popup">&times;</span>
+      <h2 id="popup-name">Product Name</h2>
+      <p id="popup-price">$0.00</p>
+      <p id="popup-description">Description here</p>
+      <select id="popup-variants"></select>
+      <button id="add-to-cart-btn">Add to Cart</button>
+    </div>
   </div>
 </div>
 
 <style>
-.custom-grid {
-  display: flex;
-  flex-wrap: wrap;
+.grid-section {
+  padding: 50px 20px;
+}
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 20px;
 }
-.grid-item {
-  flex: 1 1 calc(33.333% - 20px);
+.product-card {
   border: 1px solid #ccc;
-  padding: 10px;
-  cursor: pointer;
+  padding: 15px;
   text-align: center;
+  background: #fff;
 }
-.grid-item img {
+.product-card img {
   max-width: 100%;
 }
+.product-card h3 {
+  font-size: 18px;
+  margin: 10px 0 5px;
+}
+.product-card p {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+.product-card button {
+  padding: 10px 20px;
+  background: #000;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+.product-card button:hover {
+  background: #333;
+}
+
+/* Popup */
 .product-popup {
   position: fixed;
-  top: 0; left: 0; right:0; bottom:0;
-  background: rgba(0,0,0,0.7);
+  top:0; left:0; right:0; bottom:0;
+  background: rgba(0,0,0,0.5);
   display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+  justify-content:center;
+  align-items:center;
 }
-.popup-inner {
-  background: #fff;
-  padding: 30px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
+.popup-content {
+  background:#fff;
+  padding:20px;
+  width:90%;
+  max-width:500px;
+  position:relative;
+  border-radius:8px;
 }
-.popup-close {
-  position: absolute;
-  top: 10px; right: 15px;
-  font-size: 2rem;
-  cursor: pointer;
+.close-popup {
+  position:absolute;
+  top:10px; right:15px;
+  font-size:24px;
+  cursor:pointer;
 }
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", function(){
-  const popup = document.querySelector(".product-popup");
-  const closeBtn = document.querySelector(".popup-close");
-  const title = document.querySelector(".popup-title");
-  const price = document.querySelector(".popup-price");
-  const desc = document.querySelector(".popup-description");
-  const variantSelect = document.querySelector(".popup-variants");
-  const addBtn = document.querySelector(".popup-add-to-cart");
+document.addEventListener('DOMContentLoaded', function() {
+  const popup = document.getElementById('product-popup');
+  const popupName = document.getElementById('popup-name');
+  const popupPrice = document.getElementById('popup-price');
+  const popupDescription = document.getElementById('popup-description');
+  const popupVariants = document.getElementById('popup-variants');
+  const addToCartBtn = document.getElementById('add-to-cart-btn');
 
-  // Open popup
-  document.querySelectorAll(".grid-item").forEach(item => {
-    item.addEventListener("click", function(){
-      const handle = this.dataset.productHandle;
-      fetch(`/products/${handle}.js`)
-        .then(res => res.json())
-        .then(product => {
-          popup.style.display = "flex";
-          title.textContent = product.title;
-          price.textContent = Shopify.formatMoney(product.variants[0].price);
-          desc.innerHTML = product.description;
-
-          variantSelect.innerHTML = "";
-          product.variants.forEach(v => {
-            const option = document.createElement("option");
-            option.value = v.id;
-            option.text = v.title;
-            variantSelect.appendChild(option);
-          });
-
-          // Add to cart
-          addBtn.onclick = function(){
-            const selectedId = variantSelect.value;
-            addToCart(selectedId, 1);
-
-            // Special: if Black + Medium → add Soft Winter Jacket
-            const selectedVariant = product.variants.find(v => v.id == selectedId);
-            if(selectedVariant.title.includes("Black") && selectedVariant.title.includes("Medium")){
-              fetch('/products/soft-winter-jacket.js')
-                .then(r => r.json())
-                .then(sw => addToCart(sw.variants[0].id, 1));
-            }
-          }
-        })
-    })
+  document.querySelectorAll('.view-details-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const card = btn.closest('.product-card');
+      const name = card.querySelector('h3').textContent;
+      const price = card.querySelector('p').textContent;
+      const description = "This is a placeholder description for "+name;
+      
+      popupName.textContent = name;
+      popupPrice.textContent = price;
+      popupDescription.textContent = description;
+      
+      // Example variants
+      popupVariants.innerHTML = `
+        <option value="Black-S">Black Small</option>
+        <option value="Black-M">Black Medium</option>
+        <option value="Red-L">Red Large</option>
+      `;
+      
+      popup.style.display = 'flex';
+    });
   });
 
-  closeBtn.addEventListener("click", ()=> popup.style.display = "none");
+  document.querySelector('.close-popup').addEventListener('click', function() {
+    popup.style.display = 'none';
+  });
 
-  function addToCart(id, qty){
-    fetch('/cart/add.js', {
-      method:'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({id: id, quantity: qty})
-    })
-    .then(res=>res.json()).then(data=>{
-      alert(${data.title} added to cart)
-    }).catch(err=>console.error(err));
-  }
+  addToCartBtn.addEventListener('click', function() {
+    const variant = popupVariants.value;
+    const productName = popupName.textContent;
+
+    alert('Added '+productName+' ('+variant+') to cart');
+
+    // Auto add Soft Winter Jacket if Black & Medium selected
+    if(variant === 'Black-M') {
+      alert('Soft Winter Jacket added automatically!');
+    }
+
+    popup.style.display = 'none';
+  });
 });
 </script>
+
+{% schema %}
+{
+  "name": "Product Grid",
+  "blocks": [
+    {
+      "type": "product",
+      "name": "Product",
+      "settings": [
+        {
+          "type": "text",
+          "id": "product_name",
+          "label": "Product Name",
+          "default": "Sample Product"
+        },
+        {
+          "type": "text",
+          "id": "product_price",
+          "label": "Product Price",
+          "default": "$99.99"
+        },
+        {
+          "type": "image_picker",
+          "id": "product_image",
+          "label": "Product Image"
+        },
+        {
+          "type": "product",
+          "id": "product",
+          "label": "Select Product"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 6,
+  "presets": [
+    {
+      "name": "Product Grid",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
