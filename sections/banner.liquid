@@ -1,179 +1,237 @@
-<!-- Image will be uploaded by merchant in Shopify admin -->
-
+<!-- ================== GIFT BANNER ================== -->
 <div class="banner-section">
 
+  <!-- TOP BAR -->
   <div class="banner-top">
     <span class="logo-text">{{ section.settings.logo_text }}</span>
     <span class="center-text">{{ section.settings.center_text }}</span>
     <a href="{{ section.settings.cta_link }}" class="choose-btn">
       {{ section.settings.cta_text }}
     </a>
+    <!-- Mobile Burger Menu -->
+    <div class="mobile-burger">
+      <input type="checkbox" id="burger-toggle">
+      <label for="burger-toggle" class="burger-label">{{ section.settings.logo_text }}</label>
+      <div class="burger-menu">
+        <a href="{{ section.settings.cta_link }}">{{ section.settings.cta_text }}</a>
+      </div>
+    </div>
   </div>
 
+  <!-- BANNER IMAGE -->
   <div class="banner-image">
     {% if section.settings.banner_image != blank %}
       <img src="{{ section.settings.banner_image | image_url: width: 1600 }}">
     {% endif %}
-  </div>
 
-  <div class="banner-content">
-    <h1>{{ section.settings.heading }}</h1>
-    <p>{{ section.settings.subheading }}</p>
-    <a href="{{ section.settings.button_link }}" class="banner-button">
-      {{ section.settings.button_text }}
-    </a>
+    <!-- OVERLAY CONTENT -->
+    <div class="banner-content">
+      <h1>{{ section.settings.heading }}</h1>
+      <p>{{ section.settings.subheading }}</p>
+      <a href="{{ section.settings.button_link }}" class="banner-button">
+        {{ section.settings.button_text }} <span class="arrow">→</span>
+      </a>
+    </div>
   </div>
-
 </div>
 
 <style>
-.banner-secti on { 
-  padding:40px; 
+/* ================= DESKTOP ================= */
+.banner-section {
+  position: relative;
+  padding: 20px 40px;
 }
 
 .banner-top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
-/* IMAGE AREA  */
-.banner-image {
-  height:400px;
-  position:relative;
-  overflow:hidden;
-}
-
-.banner-image img {
-  width:100%;
-  height:100%;
-  object-fit:cover;
-}
-
-/*  OVERLAY CONTENT */
-.banner-content {
-  position:absolute;
-  bottom:30px;
-  left:30px;
-  color:#fff;
-  max-width:400px;
-}
-
-.banner-content h1 {
-  font-size:42px;
-  margin-bottom:10px;
-}
-
-.banner-content p {
-  font-size:16px;
-  margin-bottom:20px;
-}
-
-.banner-button {
-  display:inline-block;
-  padding:14px 28px;
-  background:#000;
-  color:#fff;
-  text-decoration:none;
-  transition:0.3s;
-}
-
-.banner-button:hover {
-  transform:scale(1.05);
-}
-
-/*  TOP BAR  */
 .logo-text {
-  font-weight:700;
-  border:2px solid #000;
-  padding:6px 10px;
+  font-weight: 700;
+  border: 2px solid #000;
+  padding: 6px 10px;
 }
 
 .center-text {
-  font-size:14px;
-  text-transform:uppercase;
+  font-size: 14px;
+  text-transform: uppercase;
 }
 
 .choose-btn {
-  background:#f7d046;
-  padding:10px 18px;
-  text-decoration:none;
-  color:#000;
-  font-weight:600;
-  transition:0.3s;
+  background: #f7d046;
+  padding: 10px 18px;
+  text-decoration: none;
+  color: #000;
+  font-weight: 600;
+  transition: 0.3s;
 }
 
 .choose-btn:hover {
-  transform:translateX(5px);
+  transform: translateX(5px);
 }
 
-/*  MOBILE  */
+/* BANNER IMAGE */
+.banner-image {
+  position: relative;
+  height: 400px;
+  overflow: hidden;
+}
 
+.banner-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* OVERLAY CONTENT */
+.banner-content {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  color: #fff;
+  max-width: 400px;
+}
+
+.banner-content h1 {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.banner-content p {
+  font-size: 16px;
+  margin-bottom: 20px;
+}
+
+.banner-button {
+  display: inline-block;
+  padding: 14px 28px;
+  background: #000;
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.banner-button:hover {
+  transform: scale(1.05);
+}
+
+.banner-button .arrow {
+  font-size: 20px;
+  margin-left: 10px;
+}
+
+/* ================= MOBILE ================= */
 @media (max-width: 768px) {
+  .banner-top {
+    display: none; /* hide desktop top bar */
+  }
 
+  /* Banner image height */
   .banner-image {
     height: 300px;
   }
 
-  /* Move banner-content a bit lower */
+  /* Banner content centered */
   .banner-content {
-    top: auto;
+    position: absolute;
+    top: 20px; /* heading on top */
     left: 50%;
-    bottom: 20px; /* instead of 50% center */
     transform: translateX(-50%);
+    bottom: auto;
     text-align: center;
     max-width: 90%;
   }
 
   .banner-content h1 {
     font-size: 28px;
+    margin-bottom: 10px;
   }
 
   .banner-content p {
     font-size: 14px;
+    margin-bottom: 20px;
   }
 
-  /* Shrink top bar buttons */
-  .banner-top {
+  /* Big centered button */
+  .banner-button {
+    padding: 16px 30px;
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .banner-button .arrow {
+    font-size: 22px;
+  }
+
+  /* ===== Burger Menu ===== */
+  .mobile-burger {
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 15px;
+  }
+
+  .mobile-burger input {
+    display: none;
+  }
+
+  .burger-label {
+    display: block;
+    background: #f7d046;
+    padding: 8px 16px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .burger-menu {
+    display: none;
+    position: absolute;
+    top: 40px;
+    left: 0;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 150px;
+    z-index: 10;
     flex-direction: column;
-    align-items: flex-start;
-    gap: 10px; /* spacing between logo, center text, and button */
   }
 
-  .logo-text, .choose-btn {
-    font-size: 14px; /* smaller font */
-    padding: 4px 8px; /* shrink buttons */
-    border-width: 1px; /* thinner border for logo */
+  .burger-menu a {
+    padding: 10px 15px;
+    text-decoration: none;
+    color: #000;
+    border-bottom: 1px solid #eee;
   }
 
-  .center-text {
-    font size:12px;
+  .burger-menu a:last-child {
+    border-bottom: none;
   }
 
-  .choose-btn {
-    background:#f7d046;
-    font weight:500;
+  .mobile-burger input:checked ~ .burger-menu {
+    display: flex;
   }
 }
-
 </style>
 
 {% schema %}
 {
   "name": "Gift Banner",
   "settings": [
-    { "type":"text","id":"logo_text","label":"Left Text","default":"TISSO VISION" },
-    { "type":"text","id":"center_text","label":"Center Text","default":"Find the ideal gift for your loved ones" },
-    { "type":"text","id":"cta_text","label":"Right Button Text","default":"CHOOSE GIFT" },
-    { "type":"url","id":"cta_link","label":"Right Button Link","default":"/collections/all" },
-
-    { "type":"text","id":"heading","label":"Main Heading","default":"The Gift Guide" },
-    { "type":"text","id":"subheading","label":"Subheading","default":"Discover joy with our curated holiday picks." },
-    { "type":"text","id":"button_text","label":"Bottom Button Text","default":"SHOP NOW" },
-    { "type":"url","id":"button_link","label":"Bottom Button Link","default":"/collections/all" },
-
-    { "type":"image_picker","id":"banner_image","label":"Banner Image" }
+    { "type": "text", "id": "logo_text", "label": "Logo Text", "default": "TISSO VISION" },
+    { "type": "text", "id": "center_text", "label": "Center Text", "default": "Find the ideal gift for your loved ones" },
+    { "type": "text", "id": "cta_text", "label": "Right Button Text", "default": "CHOOSE GIFT" },
+    { "type": "url", "id": "cta_link", "label": "Right Button Link", "default": "/collections/all" },
+    { "type": "text", "id": "heading", "label": "Main Heading", "default": "The Gift Guide" },
+    { "type": "text", "id": "subheading", "label": "Subheading", "default": "Discover joy with our curated holiday picks." },
+    { "type": "text", "id": "button_text", "label": "Bottom Button Text", "default": "SHOP NOW" },
+    { "type": "url", "id": "button_link", "label": "Bottom Button Link", "default": "/collections/all" },
+    { "type": "image_picker", "id": "banner_image", "label": "Banner Image" }
   ]
 }
 {% endschema %}
