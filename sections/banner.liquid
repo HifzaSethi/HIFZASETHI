@@ -13,8 +13,11 @@
       src="{{ section.settings.banner_image | image_url: width: 1500 }}" 
       alt="Banner"
     >
+  {% else %}
+    <img src="banner.png" alt="Banner (local)">
   {% endif %}
 </div>
+
 
 
   <div class="banner-content">
@@ -61,7 +64,7 @@
 }
 
 .banner-image {
-  height: 400px; /* whatever original was - 20px */
+  height: 300px; /* whatever original was - 20px */
   overflow: hidden;
 }
 
