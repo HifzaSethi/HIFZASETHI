@@ -1,50 +1,152 @@
-<!-- ================= BANNER SECTION ================= -->
-<div class="banner-section">
-  <div class="banner-content">
-    <h1>{{ section.settings.heading }}</h1>
-    <p>{{ section.settings.subheading }}</p>
-    <a href="{{ section.settings.button_link }}" class="banner-button">
-      {{ section.settings.button_text }}
+{% stylesheet %}
+.tisso-banner {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  background: url({{ section.settings.bg_image | img_url: '2000x' }}) center center / cover no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Arial, sans-serif;
+}
+
+.tisso-inner {
+  text-align: center;
+  max-width: 720px;
+  padding: 40px 20px;
+}
+
+.tisso-tag {
+  display: inline-block;
+  border: 1px solid #ff4d4d;
+  color: #000;
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  margin-bottom: 12px;
+}
+
+.tisso-title {
+  font-size: 48px;
+  font-weight: 600;
+  margin: 8px 0;
+}
+
+.tisso-desc {
+  font-size: 15px;
+  line-height: 1.6;
+  margin-bottom: 24px;
+}
+
+.tisso-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: #000;
+  color: #fff;
+  padding: 12px 28px;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+  border: 1px solid #000;
+  transition: all .3s ease;
+  overflow: hidden;
+  position: relative;
+}
+
+.tisso-btn span {
+  position: relative;
+  z-index: 2;
+}
+
+.tisso-btn::after {
+  content: "";
+  position: absolute;
+  left: -100%;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: #fff;
+  transition: .3s;
+}
+
+.tisso-btn:hover::after {
+  left: 0;
+}
+
+.tisso-btn:hover {
+  color: #000;
+}
+
+.tisso-bottom {
+  position: absolute;
+  bottom: 14px;
+  width: 100%;
+  text-align: center;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+/* Mobile */
+@media(max-width:768px) {
+  .tisso-banner { min-height: 420px; }
+  .tisso-title { font-size: 32px; }
+  .tisso-desc { font-size: 14px; }
+}
+{% endstylesheet %}
+
+<div class="tisso-banner">
+  <div class="tisso-inner">
+
+    <div class="tisso-tag">
+      {{ section.settings.top_label }}
+    </div>
+
+    <h1 class="tisso-title">
+      {{ section.settings.heading }}
+    </h1>
+
+    <p class="tisso-desc">
+      {{ section.settings.description }}
+    </p>
+
+    <a href="{{ section.settings.button_link }}" class="tisso-btn">
+      <span>{{ section.settings.button_text }} →</span>
     </a>
+
   </div>
 
-  {% if section.settings.banner_image %}
-    <div class="banner-image">
-      <img src="{{ section.settings.banner_image | img_url: '1200x' }}" alt="Banner Image">
-    </div>
-  {% else %}
-    <div class="banner-image">
-      <img src="https://via.placeholder.com/1200x500?text=Banner+Image" alt="Placeholder">
-    </div>
-  {% endif %}
+  <div class="tisso-bottom">
+    {{ section.settings.bottom_text }}
+  </div>
 </div>
 
-<style>
-/* Banner Styles */
-.banner-section { display:flex; align-items:center; justify-content:space-between; padding:50px; background:#f8f8f8; }
-.banner-content h1 { font-size:36px; font-weight:bold; margin-bottom:15px; }
-.banner-content p { font-size:18px; margin-bottom:20px; }
-.banner-button { display:inline-block; padding:15px 30px; background:#000; color:#fff; text-decoration:none; border-radius:5px; transition:.3s; }
-.banner-button:hover { background:#333; transform:scale(1.05); }
-.banner-image img { max-width:500px; width:100%; height:auto; }
+{% javascript %}
+document.querySelectorAll('.tisso-btn').forEach(btn => {
+  btn.addEventListener('mouseenter', () => {
+    btn.style.transform = 'translateY(-2px)';
+  });
 
-@media(max-width:768px){
-  .banner-section{ flex-direction:column; text-align:center; padding:30px 20px; }
-  .banner-content h1{ font-size:28px; }
-  .banner-content p{ font-size:16px; }
-  .banner-image img{ max-width:100%; margin-top:20px; }
-}
-</style>
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = 'translateY(0)';
+  });
+});
+{% endjavascript %}
 
 {% schema %}
 {
-  "name": "Banner",
+  "name": "Tisso Banner",
   "settings": [
-    { "type":"text","id":"heading","label":"Heading","default":"The Gift Guide" },
-    { "type":"text","id":"subheading","label":"Subheading","default":"Discover the perfect gift for your loved ones" },
-    { "type":"url","id":"button_link","label":"Button Link","default":"/collections/all" },
-    { "type":"text","id":"button_text","label":"Button Text","default":"Shop Now" },
-    { "type":"image_picker","id":"banner_image","label":"Banner Image" }
+    { "type": "image_picker", "id": "bg_image", "label": "Background image" },
+    { "type": "text", "id": "top_label", "label": "Top label", "default": "TISSO VISON" },
+    { "type": "text", "id": "heading", "label": "Heading", "default": "The Gift Guide" },
+    { "type": "textarea", "id": "description", "label": "Description", "default": "Discover Joy: Your Ultimate Holiday Gift Destination." },
+    { "type": "text", "id": "button_text", "label": "Button text", "default": "SHOP NOW" },
+    { "type": "url", "id": "button_link", "label": "Button link" },
+    { "type": "text", "id": "bottom_text", "label": "Bottom text", "default": "SUSTAINABLE, ETHICALLY MADE ACTIVEWEAR" }
+  ],
+  "presets": [
+    { "name": "Tisso Banner" }
   ]
 }
 {% endschema %}
