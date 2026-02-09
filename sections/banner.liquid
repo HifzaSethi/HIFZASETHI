@@ -1,5 +1,16 @@
-<!-- ================= BANNER SECTION ================= -->
 <div class="banner-section">
+  <div class="banner-top">
+    <span class="logo-text">{{ section.settings.logo_text }}</span>
+    <span class="center-text">{{ section.settings.center_text }}</span>
+    <a href="{{ section.settings.cta_link }}" class="choose-btn">
+      {{ section.settings.cta_text }}
+    </a>
+  </div>
+
+  <div class="banner-image">
+    <img src="{{ section.settings.banner_image | img_url: '1500x' }}">
+  </div>
+
   <div class="banner-content">
     <h1>{{ section.settings.heading }}</h1>
     <p>{{ section.settings.subheading }}</p>
@@ -7,45 +18,76 @@
       {{ section.settings.button_text }}
     </a>
   </div>
-
-  {% if section.settings.banner_image %}
-    <div class="banner-image">
-      <img src="{{ section.settings.banner_image | img_url: '1200x' }}" alt="Banner Image">
-    </div>
-  {% else %}
-    <div class="banner-image">
-      <img src="C:\Users\PMLS\Downloads\theme_export__hifza-sethi-48-teststore-myshopify-com-dawn__07FEB2026-1109pm\assets\banner.png" alt="Image">
-    </div>
-  {% endif %}
 </div>
 
 <style>
-/* Banner Styles */
-.banner-section { display:flex; align-items:center; justify-content:space-between; padding:50px; background:#f8f8f8; }
-.banner-content h1 { font-size:36px; font-weight:bold; margin-bottom:15px; }
-.banner-content p { font-size:18px; margin-bottom:20px; }
-.banner-button { display:inline-block; padding:15px 30px; background:#000; color:#fff; text-decoration:none; border-radius:5px; transition:.3s; }
-.banner-button:hover { background:#333; transform:scale(1.05); }
-.banner-image img { max-width:500px; width:100%; height:auto; }
+.banner-section { padding:40px; }
 
-@media(max-width:768px){
-  .banner-section{ flex-direction:column; text-align:center; padding:30px 20px; }
-  .banner-content h1{ font-size:28px; }
-  .banner-content p{ font-size:16px; }
-  .banner-image img{ max-width:100%; margin-top:20px; }
+.banner-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.logo-text {
+  font-weight:700;
+  border:2px solid #000;
+  padding:6px 10px;
+}
+
+.center-text {
+  font-size:14px;
+  text-transform:uppercase;
+}
+
+.choose-btn {
+  background:#f7d046;
+  padding:10px 18px;
+  text-decoration:none;
+  color:#000;
+  font-weight:600;
+  transition:0.3s;
+}
+
+.choose-btn:hover {
+  transform:translateX(5px);
+}
+
+.banner-image img {
+  width:100%;
+  display:block;
+}
+
+.banner-button {
+  display:inline-block;
+  padding:14px 28px;
+  background:#000;
+  color:#fff;
+  text-decoration:none;
+  transition:0.3s;
+}
+
+.banner-button:hover {
+  transform:scale(1.05);
 }
 </style>
 
 {% schema %}
 {
-  "name": "Banner",
+  "name": "Gift Banner",
   "settings": [
-    { "type":"text","id":"heading","label":"Heading","default":"The Gift Guide" },
-    { "type":"text","id":"subheading","label":"Subheading","default":"Discover the perfect gift for your loved ones" },
-    { "type":"url","id":"button_link","label":"Button Link","default":"/collections/all" },
-    { "type":"text","id":"button_text","label":"Button Text","default":"Shop Now" },
+    { "type":"text","id":"logo_text","label":"Left Text","default":"TISSO VISION" },
+    { "type":"text","id":"center_text","label":"Center Text","default":"Find the ideal gift for your loved ones" },
+    { "type":"text","id":"cta_text","label":"Right Button Text","default":"CHOOSE GIFT" },
+    { "type":"url","id":"cta_link","label":"Right Button Link","default":"/collections/all" },
+
+    { "type":"text","id":"heading","label":"Main Heading","default":"The Gift Guide" },
+    { "type":"text","id":"subheading","label":"Subheading","default":"Discover joy with our curated holiday picks." },
+    { "type":"text","id":"button_text","label":"Bottom Button Text","default":"SHOP NOW" },
+    { "type":"url","id":"button_link","label":"Bottom Button Link","default":"/collections/all" },
+
     { "type":"image_picker","id":"banner_image","label":"Banner Image" }
   ]
 }
 {% endschema %}
-
