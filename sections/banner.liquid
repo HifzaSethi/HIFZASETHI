@@ -14,7 +14,8 @@
       alt="Banner"
     >
   {% else %}
-    <img src="banner.png" alt="Banner (local)">
+   <img src="{{ section.settings.banner_image | image_url: width: 1500 }}">
+
   {% endif %}
 </div>
 
