@@ -1,9 +1,8 @@
+<!-- ================= GRID SECTION ================= -->
 <section class="figma-grid">
   <div class="grid-wrapper">
-
     {% for product in collections.all.products limit:6 %}
     <div class="product-card" data-handle="{{ product.handle }}">
-
       <!-- IMAGE -->
       <div class="card-image">
         <img src="{{ product.featured_image | img_url: '600x' }}" alt="{{ product.title }}">
@@ -13,23 +12,18 @@
       <div class="card-info">
         <h3>{{ product.title }}</h3>
         <p class="price">{{ product.price | money }}</p>
-
-        <!-- VARIANTS UI -->
+        <!-- VARIANTS & ADD BUTTON -->
         <div class="variant-row">
-          <!-- Size select -->
           <select class="size-select">
             {% for variant in product.variants %}
               <option value="{{ variant.id }}">{{ variant.title }}</option>
             {% endfor %}
           </select>
-
-          <!-- Add button -->
           <button class="add-btn">ADD TO CART</button>
         </div>
       </div>
     </div>
     {% endfor %}
-
   </div>
 </section>
 
@@ -38,11 +32,9 @@
   <div class="popup-box">
     <span class="close">&times;</span>
     <div class="popup-grid">
-      <!-- LEFT IMAGE -->
       <div class="popup-left">
         <img class="popup-img">
       </div>
-      <!-- RIGHT INFO -->
       <div class="popup-right">
         <h2 class="popup-title"></h2>
         <p class="popup-price"></p>
@@ -55,201 +47,43 @@
 </div>
 
 <style>
-/* ================= GRID ================= */
-.figma-grid {
-  padding:50px 30px;
-}
-.grid-wrapper{
-  display:grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap:25px;
-}
+/* GRID & CARD */
+.figma-grid { padding:50px 30px; }
+.grid-wrapper{ display:grid; grid-template-columns: repeat(3, 1fr); gap:25px; }
+.product-card{ border:1px solid #eaeaea; background:#fff; cursor:pointer; transition:.25s; }
+.product-card:hover{ transform:translateY(-4px); box-shadow:0 10px 20px rgba(0,0,0,.08); }
+.card-image img{ width:100%; height:220px; object-fit:cover; }
+.card-info{ padding:14px; text-align:center; }
+.price{ font-weight:700; margin:6px 0 12px; }
+.variant-row{ display:flex; gap:8px; }
+.size-select{ flex:1; padding:8px; border:1px solid #ddd; }
+.add-btn{ background:#000; color:#fff; border:none; padding:10px 12px; font-weight:600; cursor:pointer; transition:.2s; }
+.add-btn:hover{ background:#333; }
 
-/* MOBILE: 2 column */
-@media(max-width:768px){
-  .grid-wrapper{
-    grid-template-columns: repeat(2, 1fr);
-    gap:5px;           /* reduced 10px from 15px */
-    padding: 0 0px;    /* reduced 10px from 10px */
-  }
-  .product-card{
-    width: 100%;
-    box-sizing: border-box;
-  }
-  .card-image img{
-    height:210px;      /* reduced 10px from 220px */
-  }
-  .card-info{
-    padding:4px;       /* reduced 10px from 14px */
-  }
-  .price{
-    margin: -4px 0 2px; /* adjusted -10px */
-  }
-  .variant-row{
-    gap:-2px;          /* reduced 10px proportionally */
-  }
-  .size-select{
-    padding:-2px;      /* reduced */
-  }
-  .add-btn{
-    padding:0px 2px;   /* reduced */
-  }
-}
+/* POPUP */
+.popup{ position:fixed; inset:0; background:rgba(0,0,0,.65); display:flex; justify-content:center; align-items:center; z-index:9999; }
+.popup-box{ background:#fff; width:90%; max-width:850px; border-radius:10px; padding:25px; box-shadow:0 25px 50px rgba(0,0,0,.25); position:relative; }
+.popup-grid{ display:grid; grid-template-columns:1fr 1fr; gap:30px; }
+.popup-left img{ width:100%; height:350px; object-fit:cover; border-radius:8px; }
+.popup-right{ display:flex; flex-direction:column; gap:12px; }
+.popup-title{ font-size:22px; font-weight:700; }
+.popup-price{ font-size:20px; font-weight:700; }
+.popup-variants{ padding:10px; border:1px solid #ddd; }
+.popup-add{ background:#000; color:#fff; padding:12px; border:none; font-weight:700; cursor:pointer; }
+.popup-add:hover{ background:#333; }
+.close{ position:absolute; top:10px; right:15px; font-size:26px; cursor:pointer; }
 
-/* EXTRA SMALL SCREENS: 1 column */
 @media(max-width:480px){
-  .grid-wrapper{
-    grid-template-columns: 1fr;
-    gap:0px;            /* reduced */
-    padding: 0 0px;
-  }
-  .card-image img{
-    height:210px;      /* reduced 10px */
-  }
-  .card-info{
-    padding:4px;       /* reduced 10px */
-  }
-  .price{
-    margin: -4px 0 2px; /* adjusted -10px */
-  }
+  .grid-wrapper{ grid-template-columns: repeat(2, 1fr); gap:5px; padding:0; }
+  .popup-box{ width:95%; padding:15px; }
+  .popup-grid{ grid-template-columns:1fr; gap:20px; }
+  .popup-left img{ max-height:240px; }
 }
-
-/* ================= CARD ================= */
-.product-card{
-  border:1px solid #eaeaea;
-  background:#fff;
-  transition:.25s;
-  cursor:pointer;
-}
-.product-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 10px 20px rgba(0,0,0,.08);
-}
-.card-image img{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-}
-.card-info{
-  padding:14px;
-  text-align:center;
-}
-.price{
-  font-weight:700;
-  margin:6px 0 12px;
-}
-.variant-row{
-  display:flex;
-  gap:8px;
-}
-.size-select{
-  flex:1;
-  padding:8px;
-  border:1px solid #ddd;
-}
-.add-btn{
-  background:#000;
-  color:#fff;
-  border:none;
-  padding:10px 12px;
-  font-weight:600;
-  cursor:pointer;
-  transition:.2s;
-}
-.add-btn:hover{
-  background:#333;
-}
-
-/* ================= POPUP ================= */
-.popup{
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.65);
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  z-index:9999;
-}
-.popup-box{
-  background:#fff;
-  width:90%;
-  max-width:850px;
-  border-radius:10px;
-  padding:25px;
-  box-shadow:0 25px 50px rgba(0,0,0,.25);
-  position:relative;
-}
-.popup-grid{
-  display:grid;
-  grid-template-columns: 1fr 1fr;
-  gap:30px;
-}
-.popup-left img{
-  width:100%;
-  height:350px;
-  object-fit:cover;
-  border-radius:8px;
-}
-.popup-right{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-.popup-title{
-  font-size:22px;
-  font-weight:700;
-}
-.popup-price{
-  font-size:20px;
-  font-weight:700;
-}
-.popup-variants{
-  padding:10px;
-  border:1px solid #ddd;
-}
-.popup-add{
-  background:#000;
-  color:#fff;
-  padding:12px;
-  border:none;
-  font-weight:700;
-  cursor:pointer;
-}
-.popup-add:hover{
-  background:#333;
-}
-.close{
-  position:absolute;
-  top:10px;
-  right:15px;
-  font-size:26px;
-  cursor:pointer;
-}
-
-/* MOBILE POPUP */
-@media(max-width:768px){
-  .popup-box{
-    width:95%;
-    padding:15px;      /* reduced 10px from 25px */
-  }
-  .popup-grid{
-    grid-template-columns: 1fr; /* stack left + right */
-    gap:20px;           /* reduced 10px from 30px */
-  }
-  .popup-left img{
-    width:100%;
-    height:auto;
-    max-height:240px;   /* reduced 10px from 250px */
-  }
-  .popup-right{
-    gap:2px;            /* reduced 10px from 12px */
-  }
-}
+@media(max-width:360px){ .grid-wrapper{ grid-template-columns:1fr; gap:0; } }
 </style>
 
 <script>
-document.addEventListener("DOMContentLoaded", ()=>{
-
+document.addEventListener("DOMContentLoaded", () => {
   const popup = document.querySelector(".popup");
   const close = document.querySelector(".close");
   const popupImg = document.querySelector(".popup-img");
@@ -259,58 +93,78 @@ document.addEventListener("DOMContentLoaded", ()=>{
   const popupVariants = document.querySelector(".popup-variants");
   const popupAdd = document.querySelector(".popup-add");
 
+  // ================= HELPER: ADD TO CART =================
   function addToCart(id, qty){
     fetch('/cart/add.js',{
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({id:id, quantity:qty})
-    }).then(r=>r.json())
-      .then(()=> alert("Added to cart"))
-      .catch(err=> console.error(err));
+    })
+    .then(r=>r.json())
+    .then(()=> alert("Added to cart"))
+    .catch(err=> console.error(err));
   }
 
-  // CARD ADD BUTTON
-  document.querySelectorAll(".add-btn").forEach(btn=>{
-    btn.addEventListener("click", e=>{
-      e.stopPropagation();
-      const card = btn.closest(".product-card");
-      const variantId = card.querySelector(".size-select").value;
-      addToCart(variantId,1);
-    });
-  });
+  // ================= SPECIAL VARIANT LOGIC =================
+  function checkSpecialVariantAndAdd(product){
+    const selectedVariant = product.variants.find(v=>v.id==product.selectedVariantId);
+    if(selectedVariant && selectedVariant.title.includes("Black") && selectedVariant.title.includes("Medium")){
+      fetch('/products/soft-winter-jacket.js')
+        .then(res=>res.json())
+        .then(swj=>{
+          addToCart(swj.variants[0].id,1);
+        });
+    }
+  }
 
-  // OPEN POPUP
-  document.querySelectorAll(".product-card").forEach(card=>{
-    card.addEventListener("click", ()=>{
+  // ================= GRID CARD CLICK =================
+  document.querySelectorAll(".product-card").forEach(card => {
+    // Card click opens popup
+    card.addEventListener("click", e => {
+      if(e.target.classList.contains("add-btn")) return; // ignore add button
       const handle = card.dataset.handle;
       fetch(`/products/${handle}.js`)
-      .then(r=>r.json())
-      .then(product=>{
-        popup.style.display="flex";
-        popupImg.src = product.images[0];
-        popupTitle.textContent = product.title;
-        popupPrice.textContent = product.price / 100; // formatted price
-        popupDesc.innerHTML = product.description;
+        .then(res=>res.json())
+        .then(product=>{
+          popup.style.display="flex";
+          popupImg.src = product.images[0];
+          popupTitle.textContent = product.title;
+          popupPrice.textContent = (product.price/100).toFixed(2);
+          popupDesc.innerHTML = product.description;
+          popupVariants.innerHTML="";
+          product.variants.forEach(v=>{
+            const o = document.createElement("option");
+            o.value = v.id;
+            o.textContent = v.title;
+            popupVariants.appendChild(o);
+          });
 
-        popupVariants.innerHTML="";
-        product.variants.forEach(v=>{
-          const o = document.createElement("option");
-          o.value = v.id;
-          o.textContent = v.title;
-          popupVariants.appendChild(o);
+          // Popup Add to Cart
+          popupAdd.onclick = () => {
+            product.selectedVariantId = popupVariants.value;
+            addToCart(popupVariants.value,1);
+            checkSpecialVariantAndAdd(product);
+          };
         });
+    });
 
-        // Remove old listener
-        popupAdd.replaceWith(popupAdd.cloneNode(true));
-        const newPopupAdd = document.querySelector(".popup-add");
-        newPopupAdd.addEventListener("click", ()=>{
-          addToCart(popupVariants.value,1);
+    // Card Add button
+    const btn = card.querySelector(".add-btn");
+    btn.addEventListener("click", e=>{
+      e.stopPropagation();
+      const variantId = card.querySelector(".size-select").value;
+      const handle = card.dataset.handle;
+      fetch(`/products/${handle}.js`)
+        .then(res=>res.json())
+        .then(product=>{
+          product.selectedVariantId = variantId;
+          addToCart(variantId,1);
+          checkSpecialVariantAndAdd(product);
         });
-      });
     });
   });
 
+  // ================= CLOSE POPUP =================
   close.addEventListener("click", ()=> popup.style.display="none");
-
 });
 </script>
