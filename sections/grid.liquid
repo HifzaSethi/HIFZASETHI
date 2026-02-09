@@ -1,4 +1,4 @@
-<!-- ================= GRID SECTION ================= -->
+<!--  GRID SECTION  -->
 <section class="figma-grid">
   <div class="grid-wrapper">
     {% for product in collections.all.products limit:6 %}
@@ -27,7 +27,7 @@
   </div>
 </section>
 
-<!-- ================= POPUP ================= -->
+<!--  POPUP  -->
 <div class="popup" style="display:none;">
   <div class="popup-box">
     <span class="close">&times;</span>
@@ -93,7 +93,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const popupVariants = document.querySelector(".popup-variants");
   const popupAdd = document.querySelector(".popup-add");
 
-  // ================= HELPER: ADD TO CART =================
+  //  HELPER: ADD TO CART 
   function addToCart(id, qty){
     fetch('/cart/add.js',{
       method:'POST',
@@ -105,7 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
     .catch(err=> console.error(err));
   }
 
-  // ================= SPECIAL VARIANT LOGIC =================
+  // SPECIAL VARIANT LOGIC 
   function checkSpecialVariantAndAdd(product){
     const selectedVariant = product.variants.find(v=>v.id==product.selectedVariantId);
     if(selectedVariant && selectedVariant.title.includes("Black") && selectedVariant.title.includes("Medium")){
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
             o.textContent = v.title;
             popupVariants.appendChild(o);
           });
-
+     
           // Popup Add to Cart
           popupAdd.onclick = () => {
             product.selectedVariantId = popupVariants.value;
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
           addToCart(variantId,1);
           checkSpecialVariantAndAdd(product);
         });
-    });
+    } );
   });
 
   // ================= CLOSE POPUP =================
